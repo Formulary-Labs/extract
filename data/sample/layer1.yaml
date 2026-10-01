@@ -1,0 +1,67 @@
+metadata:
+  id: ISO-27001-Layer1
+  type: ControlCatalog
+  description: |
+    Sample gemara Layer 1 control catalog for the iso27001 program,
+    used by the `extract` screen fixture. Models the FINOS CCC shape.
+  author:
+    id: formulary
+    name: Formulary
+    type: Human
+title: ISO 27001 Layer 1 Control Catalog
+groups:
+  - id: management
+    title: Management Controls
+  - id: technical
+    title: Technical Controls
+controls:
+  - id: A.5.1
+    group: management
+    title: Information Security Policy
+    objective: |
+      Ensure information security policies are established and maintained.
+  - id: A.3.1
+    group: management
+    title: Roles and Responsibilities
+    objective: |
+      Define information security roles and responsibilities.
+  - id: A.5.2
+    group: management
+    title: Management Responsibilities
+    objective: |
+      Assign management accountability for information security.
+  - id: A.3.2
+    group: management
+    title: Role Based Access Control
+    objective: |
+      Assign access based on the user's role and job function.
+  - id: A.8.2
+    group: technical
+    title: Access Control
+    objective: |
+      Protect against unauthorised access to information systems.
+  - id: A.13.1
+    group: technical
+    title: Encryption of Data in Transit
+    objective: |
+      Protect data in transit with strong encryption.
+  - id: A.13.2
+    group: technical
+    title: Encryption of Data at Rest
+    objective: |
+      Protect stored data with strong encryption.
+  - id: A.8.16
+    group: technical
+    title: Vulnerability Management
+    objective: |
+      Identify and remediate vulnerabilities on a regular basis.
+  - id: A.12.4
+    group: management
+    title: Incident Response
+    objective: |
+      Detect, report, and respond to information security events.
+  - id: A.8.13
+    group: technical
+    title: Asset Inventory
+    objective: |
+      Maintain an inventory of information and related assets.

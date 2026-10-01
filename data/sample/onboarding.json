@@ -1,0 +1,78 @@
+{
+  "product": "Acme SaaS",
+  "slug": "acme-saas",
+  "product-type": "saas",
+  "framework": "iso27001",
+  "controls": [
+    {
+      "id": "A.5.1",
+      "title": "Information Security Policy",
+      "owner": "sec-policy-team",
+      "framework": "iso27001",
+      "evidence": [
+        {
+          "type": "policy",
+          "url": "https://conf.example.com/policy/iso27001",
+          "state": "present",
+          "risk": "RISK-POLICY"
+        }
+      ]
+    },
+    {
+      "id": "A.8.2",
+      "title": "Access Control",
+      "owner": "sec-team",
+      "framework": "iso27001",
+      "evidence": [
+        {
+          "type": "configuration",
+          "url": "https://conf.example.com/ac/ACL",
+          "state": "present",
+          "risk": "RISK-ACCESS"
+        }
+      ]
+    },
+    {
+      "id": "A.13.1",
+      "title": "Encryption of Data in Transit",
+      "owner": "platform-team",
+      "framework": "iso27001",
+      "evidence": [
+        {
+          "type": "configuration",
+          "url": "https://conf.example.com/tls-config",
+          "state": "present",
+          "risk": "RISK-ENCRYPT"
+        }
+      ]
+    },
+    {
+      "id": "A.8.16",
+      "title": "Vulnerability Management",
+      "owner": "sec-team",
+      "framework": "iso27001",
+      "evidence": [
+        {
+          "type": "scan",
+          "url": "https://conf.example.com/vuln-scan/2026-08",
+          "state": "present",
+          "risk": "RISK-VULN"
+        }
+      ]
+    },
+    {
+      "id": "A.12.4",
+      "title": "Incident Response",
+      "owner": "sec-ops",
+      "framework": "iso27001",
+      "evidence": [
+        {
+          "type": "policy",
+          "url": "https://conf.example.com/incident-response",
+          "state": "present",
+          "risk": "RISK-INCIDENT"
+        }
+      ]
+    }
+  ]
+}
