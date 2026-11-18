@@ -32,6 +32,7 @@ func main() {
 		catalogFlag = flag.String("catalog", "", "Path to gemara Layer 1 control catalog YAML/JSON (required)")
 		kitFlag     = flag.String("kit", "", "Path to product onboarding kit JSON (required)")
 		programFlag = flag.String("program", "", "Program slug for provenance logging")
+		specFlag    = flag.String("spec", "", "Path to the governing spec document (optional, recorded in provenance)")
 		fmtFlag     = flag.String("format", "json", "Output format: json (default), md")
 		outputFlag  = flag.String("output", "", "Output file path (stdout if empty)")
 		quietFlag   = flag.Bool("quiet", false, "Suppress progress output")
@@ -108,11 +109,11 @@ func main() {
 	// provenance — only when a program slug is supplied.
 	if *programFlag != "" {
 		_ = provenance.Write("logs/provenance.jsonl", provenance.Entry{
-			Spec:        "functions/product-onboarding-intake-spec.md",
-			Output:      *kitFlag,
-			OutputType:  "product_onboarding_intake",
-			Program:     *programFlag,
-			Purpose:     fmt.Sprintf("extract: %d/%d controls, verdict %s",
+			Spec:       *specFlag,
+			Output:     *kitFlag,
+			OutputType: "intake_kit",
+			Program:    *programFlag,
+			Purpose: fmt.Sprintf("extract: %d/%d controls, verdict %s",
 				result.Passed, result.Total, result.Verdict),
 			Reusability: provenance.Instance,
 			QualityGate: provenance.Pass,
@@ -192,6 +193,7 @@ Flags:
   --catalog string     Path to gemara Layer 1 control catalog (required)
   --kit string         Path to product onboarding kit JSON (required)
   --program string     Program slug for provenance logging
+  --spec string        Path to the governing spec document (optional, recorded in provenance)
   --format string      Output format: json (default), md
   --output string      Output file path (stdout if empty)
   --quiet              Suppress progress output
