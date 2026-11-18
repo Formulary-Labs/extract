@@ -170,3 +170,69 @@ func TestProvenance_Chain(t *testing.T) {
 		}
 	}
 }
+
+// TestProvenance_NoInternalContent guards the public-content boundary. These
+// repos are public; the provenance record must not name internal repositories,
+// private spec paths, or program vocabularies that exist only inside a private
+// workspace. The check is deliberately on the raw JSON: a leak in any field,
+// not only the ones named below, should fail the test.
+func TestProvenance_NoInternalContent(t *testing.T) {
+	bin := buildBinary(t)
+	s := sampleDir()
+	work := t.TempDir()
+	_, stderr, code := runBinary(t, bin, work,
+		"--catalog", filepath.Join(s, "layer1.yaml"),
+		"--kit", filepath.Join(s, "onboarding.json"),
+		"--program", "demo-program",
+	)
+	if code != 0 {
+		t.Fatalf("provenance run: expected exit 0, got %d; stderr=%q", code, stderr)
+	}
+
+	raw, err := os.ReadFile(filepath.Join(work, "logs", "provenance.jsonl"))
+	if err != nil {
+		t.Fatalf("read provenance log: %v", err)
+	}
+
+	banned := []string{"product-onboarding", "product_onboarding", "functions/"}
+	lowered := strings.ToLower(string(raw))
+	for _, b := range banned {
+		if strings.Contains(lowered, b) {
+			t.Errorf("provenance log contains internal reference %q", b)
+		}
+	}
+
+	var entry provenance.Entry
+	if err := json.Unmarshal([]byte(strings.SplitN(strings.TrimSpace(string(raw)), "\n", 2)[0]), &entry); err != nil {
+		t.Fatalf("decode provenance entry: %v", err)
+	}
+	if entry.OutputType != "intake_kit" {
+		t.Errorf("output_type = %q, want %q", entry.OutputType, "intake_kit")
+	}
+	if entry.Spec != "" {
+		t.Errorf("spec = %q, want empty when --spec is not supplied", entry.Spec)
+	}
+
+	// With --spec the operator-supplied path is recorded verbatim.
+	work2 := t.TempDir()
+	_, stderr, code = runBinary(t, bin, work2,
+		"--catalog", filepath.Join(s, "layer1.yaml"),
+		"--kit", filepath.Join(s, "onboarding.json"),
+		"--program", "demo-program",
+		"--spec", "docs/kit-contract.md",
+	)
+	if code != 0 {
+		t.Fatalf("run with --spec: expected exit 0, got %d; stderr=%q", code, stderr)
+	}
+	raw2, err := os.ReadFile(filepath.Join(work2, "logs", "provenance.jsonl"))
+	if err != nil {
+		t.Fatalf("read provenance log: %v", err)
+	}
+	var entry2 provenance.Entry
+	if err := json.Unmarshal([]byte(strings.SplitN(strings.TrimSpace(string(raw2)), "\n", 2)[0]), &entry2); err != nil {
+		t.Fatalf("decode provenance entry: %v", err)
+	}
+	if entry2.Spec != "docs/kit-contract.md" {
+		t.Errorf("spec = %q, want %q", entry2.Spec, "docs/kit-contract.md")
+	}
+}
